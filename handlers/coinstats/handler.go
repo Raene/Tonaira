@@ -9,6 +9,10 @@ import (
 	"github.com/gofiber/fiber"
 )
 
+/*
+this handler receives the amount to be converted in USD and returns the converted value in btc
+along with the current exchange rate
+*/
 func (c *CoinStats) getStats(ctx *fiber.Ctx) {
 	var e chan error = make(chan error)
 	var s chan string = make(chan string)
