@@ -1,6 +1,7 @@
 package coinstats
 
 import (
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -15,25 +16,30 @@ type Network struct {
 	url  string
 }
 
-func coinToCurrency(curr string, amount float64, name string) (string, error) {
+func (c *coinQuery) coinToCurrency(s chan string, e chan error) {
 	var network = map[string]Network{
-		"btc": {name: "bitcoin", url: fmt.Sprintf("https://blockchain.info/tobtc?currency=%s&value=%f", curr, amount)},
+		"btc": {name: "bitcoin", url: fmt.Sprintf("https://blockchain.info/tobtc?currency=%s&value=%f", c.currency, c.amount)},
 	}
 
 	// we can use this if statement to check to see if
 	// a given key exists within a map in Go
-	netwk, ok := network[name]
+	netwk, ok := network[c.name]
 	if !ok {
-		return "Unregistered Crypto Network", nil
+		e <- errors.New("Unregistered Crypto Network")
+		s <- " "
+		return
 	}
 
 	response, err := http.Get(netwk.url)
 	if err != nil {
-		return "", err
+		e <- err
+		s <- " "
+		return
 	}
 
 	data, _ := ioutil.ReadAll(response.Body)
-	return string(data), nil
+	e <- nil
+	s <- string(data)
 
 }
 
@@ -44,8 +50,8 @@ type coinQuery struct {
 }
 
 func (c *CoinStats) getStats(ctx *fiber.Ctx) {
-	// var e chan error  = make(chan error)
-	// var s chan string = make(chan string)
+	var e chan error = make(chan error)
+	var s chan string = make(chan string)
 	coin := new(coinQuery)
 	var err error
 	//clean query strings of empty space
@@ -56,14 +62,18 @@ func (c *CoinStats) getStats(ctx *fiber.Ctx) {
 	coin.amount, err = strconv.ParseFloat(strings.TrimSpace(ctx.Query("amount")), 64)
 	if err != nil {
 		ctx.Next(err)
+		return
 	}
 
-	data, err := coinToCurrency(coin.currency, coin.amount, coin.name)
+	go coin.coinToCurrency(s, e)
 
+	err = <-e
 	if err != nil {
 		ctx.Next(err)
+		return
 	}
 
+	data := <-s
 	ctx.Status(200).JSON(fiber.Map{
 		"data":    data,
 		"message": "success",
