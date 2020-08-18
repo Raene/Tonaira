@@ -19,7 +19,7 @@ func coinToCurrency(curr string, amount float64, name string) (string, error) {
 	var network = map[string]Network{
 		"btc": {name: "bitcoin", url: fmt.Sprintf("https://blockchain.info/tobtc?currency=%s&value=%f", curr, amount)},
 	}
-	fmt.Println(name)
+
 	// we can use this if statement to check to see if
 	// a given key exists within a map in Go
 	netwk, ok := network[name]
@@ -44,6 +44,8 @@ type coinQuery struct {
 }
 
 func (c *CoinStats) getStats(ctx *fiber.Ctx) {
+	// var e chan error  = make(chan error)
+	// var s chan string = make(chan string)
 	coin := new(coinQuery)
 	var err error
 	//clean query strings of empty space
@@ -62,6 +64,8 @@ func (c *CoinStats) getStats(ctx *fiber.Ctx) {
 		ctx.Next(err)
 	}
 
-	ctx.SendString(data)
-	ctx.SendStatus(200)
+	ctx.Status(200).JSON(fiber.Map{
+		"data":    data,
+		"message": "success",
+	})
 }
