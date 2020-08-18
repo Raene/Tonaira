@@ -1,6 +1,7 @@
 package coinstats
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -43,6 +44,24 @@ func (c *coinQuery) coinToCurrency(s chan string, e chan error) {
 
 }
 
+func coinExchangeRate(x chan interface{}) {
+	type exchangeRates struct {
+		fifteenMins float64 `json:"15m"`
+		last        float64
+		buy         float64
+		sell        float64
+		symbol      string
+	}
+
+	var result map[string]interface{}
+
+	response, _ := http.Get("https://blockchain.info/ticker")
+	data, _ := ioutil.ReadAll(response.Body)
+	json.Unmarshal([]byte(data), &result)
+	x <- result["USD"].(map[string]interface{})["buy"]
+
+}
+
 type coinQuery struct {
 	currency string
 	amount   float64
@@ -52,8 +71,10 @@ type coinQuery struct {
 func (c *CoinStats) getStats(ctx *fiber.Ctx) {
 	var e chan error = make(chan error)
 	var s chan string = make(chan string)
+	var x chan interface{} = make(chan interface{})
 	coin := new(coinQuery)
 	var err error
+
 	//clean query strings of empty space
 	coin.currency = strings.TrimSpace(ctx.Query("currency"))
 	coin.name = strings.TrimSpace(ctx.Query("name"))
@@ -66,6 +87,7 @@ func (c *CoinStats) getStats(ctx *fiber.Ctx) {
 	}
 
 	go coin.coinToCurrency(s, e)
+	go coinExchangeRate(x)
 
 	err = <-e
 	if err != nil {
@@ -73,7 +95,13 @@ func (c *CoinStats) getStats(ctx *fiber.Ctx) {
 		return
 	}
 
-	data := <-s
+	coinValue := <-s
+	xChangeRate := <-x
+
+	var data = map[string]interface{}{
+		"CoinValue":    coinValue,
+		"ExchangeRate": xChangeRate,
+	}
 	ctx.Status(200).JSON(fiber.Map{
 		"data":    data,
 		"message": "success",
