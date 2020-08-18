@@ -28,7 +28,7 @@ func main() {
 
 	app := fiber.New()
 	api := app.Group("/api/v1", logger.New())
-	config := Config.ConfigInit(api)
+	config := Config.Init(api)
 
 	coinRoutes := &coinstats.CoinStats{Config: config}
 
