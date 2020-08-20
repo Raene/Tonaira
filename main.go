@@ -6,7 +6,9 @@ import (
 	"github.com/gofiber/fiber"
 	"github.com/gofiber/logger"
 	Config "github.com/raene/Tonaira/config"
+	"github.com/raene/Tonaira/database"
 	"github.com/raene/Tonaira/handlers/coinstats"
+	"github.com/raene/Tonaira/handlers/transaction"
 )
 
 //Routes interface every route should implement to get spawned
@@ -22,17 +24,20 @@ func spawnRoutes(m chan string, r ...Routes) {
 }
 
 func main() {
-	//var c chan *gorm.DB = make(chan *gorm.DB)
 	var m chan string = make(chan string)
-	//go database.InitDatabase(c)
+	db := database.Init()
 
 	app := fiber.New()
 	api := app.Group("/api/v1", logger.New())
-	config := Config.Init(api)
+	config := Config.Init(db)
 
-	coinRoutes := &coinstats.CoinStats{Config: config}
+	coinRoutes := &coinstats.CoinStats{Config: config, Router: api}
+	transactionRoutes := &transaction.Transaction{
+		Config: config,
+		Router: api,
+	}
 
-	go spawnRoutes(m, coinRoutes)
+	go spawnRoutes(m, coinRoutes, transactionRoutes)
 
 	fmt.Println(<-m)
 	app.Listen(3000)
