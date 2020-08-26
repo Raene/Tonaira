@@ -8,6 +8,7 @@ import (
 	Config "github.com/raene/Tonaira/config"
 	"github.com/raene/Tonaira/database"
 	"github.com/raene/Tonaira/handlers/coinstats"
+	"github.com/raene/Tonaira/handlers/conflux"
 	"github.com/raene/Tonaira/handlers/transaction"
 )
 
@@ -37,7 +38,12 @@ func main() {
 		Router: api,
 	}
 
-	go spawnRoutes(m, coinRoutes, transactionRoutes)
+	confluxRoutes := &conflux.Env{
+		Config: config,
+		Router: api,
+	}
+
+	go spawnRoutes(m, coinRoutes, transactionRoutes, confluxRoutes)
 
 	fmt.Println(<-m)
 	app.Listen(3000)
