@@ -41,7 +41,7 @@ func (e *Env) getAddr(ctx *fiber.Ctx) {
 	}
 
 	s1 := gocron.NewScheduler(time.UTC)
-	s1.Every(3).Seconds().Do(task, s1, addr)
+	s1.Every(3).Seconds().Do(VerifyTransaction, s1, addr)
 
 	// scheduler starts running jobs and current thread continues to execute
 	s1.StartAsync()
@@ -67,9 +67,15 @@ func generateConfluxAddress() (types.Address, error) {
 	return addr, nil
 }
 
-func task(s *gocron.Scheduler, addr types.Address) {
+/*VerifyTransaction fetches a list of conflux generated addresses from the database
+where verified is false
+loops through them and checks if they have a balance.
+If the balance matches the specified crypto amount in the transaction db
+It is transferred to our main account and the user generated account is deleted
+*/
+func VerifyTransaction(s *gocron.Scheduler, addr types.Address) {
 	fmt.Println(addr)
-	x := 2
+	x := 1
 	if x == 1 {
 		s.Stop()
 	}
