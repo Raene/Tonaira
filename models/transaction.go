@@ -3,6 +3,8 @@ package models
 import (
 	"database/sql"
 	"time"
+
+	"github.com/Conflux-Chain/go-conflux-sdk/types"
 )
 
 //Transaction model containing details of transaction
@@ -16,6 +18,7 @@ type Transaction struct {
 	Currency    string
 	Coin        int
 	Crypto      string
+	Address     types.Address
 	createdAt   time.Time
 }
 
