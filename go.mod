@@ -3,7 +3,8 @@ module github.com/raene/Tonaira
 go 1.15
 
 require (
-	github.com/Conflux-Chain/go-conflux-sdk v0.4.0 // indirect
+	github.com/Conflux-Chain/go-conflux-sdk v0.4.0
+	github.com/go-co-op/gocron v0.3.0
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/gofiber/fiber v1.14.2
 	github.com/gofiber/logger v0.2.4
