@@ -41,7 +41,7 @@ func (e *Env) getAddr(ctx *fiber.Ctx) {
 	}
 
 	s1 := gocron.NewScheduler(time.UTC)
-	s1.Every(3).Seconds().Do(VerifyTransaction, s1, addr)
+	s1.Every(60).Seconds().Do(VerifyTransaction, s1, addr)
 
 	// scheduler starts running jobs and current thread continues to execute
 	s1.StartAsync()
