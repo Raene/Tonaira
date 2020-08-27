@@ -1,30 +1,41 @@
 package database
 
 import (
-	"database/sql"
-
 	"fmt"
-	"time"
+	"log"
 
-	//mysql-driver imported for effect
-	_ "github.com/go-sql-driver/mysql"
+	"github.com/jinzhu/gorm"
+	//import driver for effect
+	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"github.com/spf13/viper"
 )
 
 //Init sets up the database
-func Init() *sql.DB {
-	dbConn, err := sql.Open("mysql", "root:root@tcp(127.0.0.1:3306)/tonaira")
+func Init() *gorm.DB {
+	viper.SetConfigFile(".env")
+	// Find and read the config file
+	err := viper.ReadInConfig()
+
 	if err != nil {
-		fmt.Println(err)
+		log.Fatalf("Error while reading config file %s", err)
 	}
 
-	err = dbConn.Ping()
+	// To get the value from the config file using key
+	// viper package read .env
+	viperUser := viper.Get("POSTGRES_USER")
+	viperPassword := viper.Get("POSTGRES_PASSWORD")
+	viperDb := viper.Get("POSTGRES_DB")
+	viperHost := viper.Get("POSTGRES_HOST")
+	viperPort := viper.Get("POSTGRES_PORT")
+
+	// https://gobyexample.com/string-formatting
+	prosgretConname := fmt.Sprintf("host=%v port=%v user=%v dbname=%v password=%v sslmode=disable", viperHost, viperPort, viperUser, viperDb, viperPassword)
+
+	fmt.Println("conname is\t\t", prosgretConname)
+
+	db, err := gorm.Open("postgres", prosgretConname)
 	if err != nil {
-		fmt.Println("Ping Failed")
+		panic("Failed to connect to database!")
 	}
-
-	dbConn.SetMaxOpenConns(10)
-	dbConn.SetMaxIdleConns(5)
-	dbConn.SetConnMaxLifetime(time.Second * 10)
-
-	return dbConn
+	return db
 }

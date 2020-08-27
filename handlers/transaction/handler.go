@@ -9,9 +9,12 @@ func (t *Transaction) get(ctx *fiber.Ctx) {
 	db := t.Config.Db
 	transactions := models.Transaction{}
 
-	trans, err := transactions.Get(db)
-	if err != nil {
-		ctx.Next(err)
+	trans, errs := transactions.Get(db)
+	if len(errs) > 0 {
+		ctx.Status(500).JSON(fiber.Map{
+			"data":    errs,
+			"message": "failed",
+		})
 		return
 	}
 
