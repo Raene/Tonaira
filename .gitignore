@@ -15,3 +15,5 @@
 # vendor/
 
 .env
+#ignore the keystore folder, they contain accounts and shouldn't be pushed, i think.....
+keystore/

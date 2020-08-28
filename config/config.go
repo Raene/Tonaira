@@ -1,18 +1,16 @@
 package config
 
-import (
-	"github.com/gofiber/fiber"
-)
+import "github.com/jinzhu/gorm"
 
 //Config type contains Router
 type Config struct {
-	Router fiber.Router
+	Db *gorm.DB
 }
 
 //Init sets up the needed variables required for the server app to run
-func Init(router fiber.Router) *Config {
+func Init(db *gorm.DB) *Config {
 	config := Config{}
-	config.Router = router
+	config.Db = db
 
 	return &config
 }
