@@ -13,7 +13,7 @@ func (t *Transaction) get(ctx *fiber.Ctx) {
 	if len(errs) > 0 {
 		ctx.Status(500).JSON(fiber.Map{
 			"data":    errs,
-			"message": "failed",
+			"success": false,
 		})
 		return
 	}
@@ -23,6 +23,6 @@ func (t *Transaction) get(ctx *fiber.Ctx) {
 	}
 	ctx.Status(200).JSON(fiber.Map{
 		"data":    data,
-		"message": "success",
+		"success": true,
 	})
 }
