@@ -31,8 +31,6 @@ func Init() *gorm.DB {
 	// https://gobyexample.com/string-formatting
 	prosgretConname := fmt.Sprintf("host=%v port=%v user=%v dbname=%v password=%v sslmode=disable", viperHost, viperPort, viperUser, viperDb, viperPassword)
 
-	fmt.Println("conname is\t\t", prosgretConname)
-
 	db, err := gorm.Open("postgres", prosgretConname)
 	if err != nil {
 		panic("Failed to connect to database!")
