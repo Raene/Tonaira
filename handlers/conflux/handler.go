@@ -14,16 +14,16 @@ func (e *Env) getAddr(ctx *fiber.Ctx) {
 	err := ctx.BodyParser(&cfxTransaction)
 	if err != nil {
 		ctx.Status(400).JSON(&fiber.Map{
+			"data":    err,
 			"success": false,
-			"message": err,
 		})
 		return
 	}
 	addr, err := models.GenerateConfluxAddress()
 	if err != nil {
 		ctx.Status(400).JSON(&fiber.Map{
+			"data":    err,
 			"success": false,
-			"message": err,
 		})
 		return
 	}
@@ -32,8 +32,8 @@ func (e *Env) getAddr(ctx *fiber.Ctx) {
 	err = cfxTransaction.Create(db)
 	if err != nil {
 		ctx.Status(500).JSON(&fiber.Map{
+			"data":    err,
 			"success": false,
-			"message": err,
 		})
 		return
 	}
@@ -45,6 +45,6 @@ func (e *Env) getAddr(ctx *fiber.Ctx) {
 
 	ctx.Status(200).JSON(fiber.Map{
 		"data":    data,
-		"message": "success",
+		"success": true,
 	})
 }
