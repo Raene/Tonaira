@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 
+	"github.com/raene/Tonaira/models"
+
 	"github.com/gofiber/fiber"
 	"github.com/gofiber/logger"
 	Config "github.com/raene/Tonaira/config"
@@ -44,6 +46,7 @@ func main() {
 	}
 
 	go spawnRoutes(m, coinRoutes, transactionRoutes, confluxRoutes)
+	go models.SpawnConfluxCron(db)
 
 	fmt.Println(<-m)
 	app.Listen(3000)
