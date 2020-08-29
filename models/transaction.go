@@ -9,13 +9,13 @@ import (
 
 //Transaction model containing details of transaction
 type Transaction struct {
-	ID            int64
-	AccountNumber string
-	Bank          string
-	Sender        *string
-	SenderEmail   *string
-	Amount        int
-	Network       string
+	ID            int64   `json:"id"`
+	AccountNumber string  `json:"accountNumber"`
+	Bank          string  `json:"bank"`
+	Sender        *string `json:"sender"`
+	SenderEmail   *string `json:"senderEmail"`
+	Amount        int     `json:"amount"`
+	Network       string  `json:"network"`
 	Status        bool
 	Address       types.Address
 	createdAt     time.Time
