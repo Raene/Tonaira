@@ -51,12 +51,12 @@ It is transferred to our main account and the user generated account is deleted
 func VerifyTransaction(s *gocron.Scheduler, tx Transaction, db *gorm.DB) {
 	client, err := initClient()
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
 	}
 	am := initAccountManager()
 	client.SetAccountManager(am)
 
-	bal, err := client.GetBalance(tx.Address)
+	bal, err := client.GetBalance(types.Address(tx.Address))
 	if err != nil {
 		fmt.Println(err)
 		s.Stop()
@@ -65,7 +65,7 @@ func VerifyTransaction(s *gocron.Scheduler, tx Transaction, db *gorm.DB) {
 	bigAmount := hexutil.Big(*bal)
 	fmt.Println(bal.Cmp(b))
 	if bal.Cmp(b) != 0 {
-		TransToMainAccount(client, am, tx.Address, types.Address("0x17a77c881ff8861507c047db7ecb49b5745274fa"), &bigAmount)
+		TransToMainAccount(client, am, types.Address(tx.Address), types.Address("0x17a77c881ff8861507c047db7ecb49b5745274fa"), &bigAmount)
 		//set account status in db to true
 		tx.Status = true
 		err := tx.Update(db)
