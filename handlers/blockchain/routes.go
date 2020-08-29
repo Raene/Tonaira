@@ -28,5 +28,5 @@ func (e *Env) SetupRoutes() {
 	e.Xpub = viper.Get("BLOCKCHAIN_XPUB").(string)
 
 	conflux := e.Router.Group("/blockchain")
-	conflux.Get("/", e.getAddr)
+	conflux.Post("/", e.getAddr)
 }

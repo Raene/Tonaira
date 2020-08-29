@@ -3,7 +3,6 @@ package models
 import (
 	"time"
 
-	"github.com/Conflux-Chain/go-conflux-sdk/types"
 	"github.com/jinzhu/gorm"
 )
 
@@ -17,7 +16,7 @@ type Transaction struct {
 	Amount        int     `json:"amount"`
 	Network       string  `json:"network"`
 	Status        bool
-	Address       types.Address
+	Address       string
 	createdAt     time.Time
 }
 
