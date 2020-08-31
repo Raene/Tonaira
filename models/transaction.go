@@ -13,7 +13,7 @@ type Transaction struct {
 	Bank          string  `json:"bank"`
 	Sender        *string `json:"sender"`
 	SenderEmail   *string `json:"senderEmail"`
-	Amount        int     `json:"amount"`
+	ExchangeRate  float32 `json:"exchangeRate"`
 	Network       string  `json:"network"`
 	Status        bool
 	Address       string
@@ -40,7 +40,7 @@ func (t *Transaction) Get(db *gorm.DB) ([]Transaction, []error) {
 func (t *Transaction) GetWhere(db *gorm.DB) ([]Transaction, []error) {
 	{
 		transactions := []Transaction{}
-		errs := db.Where("status = ?", false).Find(&transactions).GetErrors()
+		errs := db.Where("status = ? AND network =?", false, "conflux").Find(&transactions).GetErrors()
 		if len(errs) != 0 {
 			return transactions, errs
 		}

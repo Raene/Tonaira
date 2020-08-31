@@ -14,7 +14,7 @@ require (
 	github.com/mattn/go-sqlite3 v1.14.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pressly/goose v2.6.0+incompatible // indirect
-	github.com/rpip/paystack-go v0.0.0-20180509111153-5333b023a74e // indirect
+	github.com/rpip/paystack-go v0.0.0-20180509111153-5333b023a74e
 	github.com/spf13/viper v1.7.1
 	github.com/ziutek/mymysql v1.5.4 // indirect
 )

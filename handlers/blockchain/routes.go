@@ -27,6 +27,7 @@ func (e *Env) SetupRoutes() {
 	e.ApiKey = viper.Get("BLOCKCHAIN_APIKEY").(string)
 	e.Xpub = viper.Get("BLOCKCHAIN_XPUB").(string)
 
-	conflux := e.Router.Group("/blockchain")
-	conflux.Post("/", e.getAddr)
+	blockChain := e.Router.Group("/blockchain")
+	blockChain.Post("/", e.getAddr)
+	blockChain.Post("/init-transfer", e.initTransfer)
 }

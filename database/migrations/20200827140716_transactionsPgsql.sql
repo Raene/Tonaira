@@ -6,7 +6,7 @@ CREATE TABLE transactions (
     bank varchar(255) NOT NULL,
     sender varchar(255),
     sender_email varchar(255),
-    amount int NOT NULL,
+    exchange_rate FLOAT NOT NULL,
     network  varchar(255) NOT NULL,
     address  varchar(255) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT now(),
