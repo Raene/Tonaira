@@ -59,6 +59,6 @@ func CoinExchangeRate(x chan interface{}) {
 	response, _ := http.Get("https://blockchain.info/ticker")
 	data, _ := ioutil.ReadAll(response.Body)
 	json.Unmarshal([]byte(data), &result)
-	x <- result["USD"].(map[string]interface{})["buy"]
+	x <- float32(result["USD"].(map[string]interface{})["buy"].(float64))
 
 }

@@ -9,9 +9,9 @@ import (
 	"github.com/gofiber/logger"
 	Config "github.com/raene/Tonaira/config"
 	"github.com/raene/Tonaira/database"
+	"github.com/raene/Tonaira/handlers/blockchain"
 	"github.com/raene/Tonaira/handlers/coinstats"
 	"github.com/raene/Tonaira/handlers/conflux"
-	"github.com/raene/Tonaira/handlers/transaction"
 )
 
 //Routes interface every route should implement to get spawned
@@ -35,17 +35,18 @@ func main() {
 	config := Config.Init(db)
 
 	coinRoutes := &coinstats.CoinStats{Config: config, Router: api}
-	transactionRoutes := &transaction.Transaction{
-		Config: config,
-		Router: api,
-	}
 
 	confluxRoutes := &conflux.Env{
 		Config: config,
 		Router: api,
 	}
 
-	go spawnRoutes(m, coinRoutes, transactionRoutes, confluxRoutes)
+	blockchainRoutes := &blockchain.Env{
+		Config: config,
+		Router: api,
+	}
+
+	go spawnRoutes(m, coinRoutes, blockchainRoutes, confluxRoutes)
 	go models.SpawnConfluxCron(db)
 
 	fmt.Println(<-m)

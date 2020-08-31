@@ -3,21 +3,20 @@ package models
 import (
 	"time"
 
-	"github.com/Conflux-Chain/go-conflux-sdk/types"
 	"github.com/jinzhu/gorm"
 )
 
 //Transaction model containing details of transaction
 type Transaction struct {
-	ID            int64
-	AccountNumber string
-	Bank          string
-	Sender        *string
-	SenderEmail   *string
-	Amount        int
-	Network       string
+	ID            int64   `json:"id"`
+	AccountNumber string  `json:"accountNumber"`
+	Bank          string  `json:"bank"`
+	Sender        *string `json:"sender"`
+	SenderEmail   *string `json:"senderEmail"`
+	ExchangeRate  float32 `json:"exchangeRate"`
+	Network       string  `json:"network"`
 	Status        bool
-	Address       types.Address
+	Address       string
 	createdAt     time.Time
 }
 
@@ -41,7 +40,7 @@ func (t *Transaction) Get(db *gorm.DB) ([]Transaction, []error) {
 func (t *Transaction) GetWhere(db *gorm.DB) ([]Transaction, []error) {
 	{
 		transactions := []Transaction{}
-		errs := db.Where("status = ?", false).Find(&transactions).GetErrors()
+		errs := db.Where("status = ? AND network =?", false, "conflux").Find(&transactions).GetErrors()
 		if len(errs) != 0 {
 			return transactions, errs
 		}

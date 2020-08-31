@@ -27,7 +27,7 @@ func (e *Env) getAddr(ctx *fiber.Ctx) {
 		})
 		return
 	}
-	cfxTransaction.Address = addr
+	cfxTransaction.Address = string(addr)
 	//insert into database here
 	err = cfxTransaction.Create(db)
 	if err != nil {
