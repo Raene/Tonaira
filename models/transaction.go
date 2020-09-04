@@ -40,7 +40,7 @@ func (t *Transaction) Get(db *gorm.DB) ([]Transaction, []error) {
 func (t *Transaction) GetWhere(db *gorm.DB) ([]Transaction, []error) {
 	{
 		transactions := []Transaction{}
-		errs := db.Where("status = ? AND network =?", false, "conflux").Find(&transactions).GetErrors()
+		errs := db.Where("status = ? AND network =?", false, "cfx").Find(&transactions).GetErrors()
 		if len(errs) != 0 {
 			return transactions, errs
 		}
