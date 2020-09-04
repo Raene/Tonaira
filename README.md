@@ -31,14 +31,18 @@ This is the backed-api for Tonaira. This api has GoMod enabled, so please enable
  }
 ```
 
- it returns data in the JSON form
+ it returns data in the JSON form, conflux hasnt gone public yet as at the time of building this, so it has no exchangeRate yet.
 
 ```json
     {
     "data": {
-        "address": string
+        "address": string,
+        "exchangeRate": float32
 },
     "success": true
 }
 ```
+
+` <http://localhost:3000/api/v1/blockchain>:
+- POST: <http://localhost:3000/api/v1/blockchain/> it expects a transaction object same as the conflux api. and also returns data in the same format as the conflux api
   
