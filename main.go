@@ -12,6 +12,7 @@ import (
 	"github.com/raene/Tonaira/handlers/blockchain"
 	"github.com/raene/Tonaira/handlers/coinstats"
 	"github.com/raene/Tonaira/handlers/conflux"
+	"github.com/raene/Tonaira/handlers/paystack"
 )
 
 //Routes interface every route should implement to get spawned
@@ -41,12 +42,17 @@ func main() {
 		Router: api,
 	}
 
+	paystackRoutes := &paystack.Env{
+		Config: config,
+		Router: api,
+	}
+
 	blockchainRoutes := &blockchain.Env{
 		Config: config,
 		Router: api,
 	}
 
-	go spawnRoutes(m, coinRoutes, blockchainRoutes, confluxRoutes)
+	go spawnRoutes(m, coinRoutes, blockchainRoutes, confluxRoutes, paystackRoutes)
 	go models.SpawnConfluxCron(db)
 
 	fmt.Println(<-m)

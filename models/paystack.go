@@ -21,7 +21,7 @@ func MakeTransfer(t Transaction, amount float32) (*paystack.Transfer, error) {
 	var bankCode string
 	//for comparism, convert both strings bank name and t.Bank to lowerCase leters
 	for _, bank := range banks.Values {
-		if bank.Name == t.Bank {
+		if bank.Slug == t.Bank {
 			bankCode = bank.Code
 			break
 		}

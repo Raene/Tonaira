@@ -102,7 +102,7 @@ func (e *Env) initTransfer(ctx *fiber.Ctx) {
 	amount := t.ExchangeRate * float32(payload.Value)
 	//convert amount to naira first
 	ngn := amount * 40000
-	_, err = models.MakeTransfer(t, ngn)
+	transfer, err := models.MakeTransfer(t, ngn)
 	if err != nil {
 		fmt.Println(err)
 		payload.Status = false
@@ -113,21 +113,21 @@ func (e *Env) initTransfer(ctx *fiber.Ctx) {
 		}
 	}
 
-	// if transfer.Status != " " {
-	// 	fmt.Println("in here")
-	// 	payload.Status = false
-	// 	err = db.Create(&payload).Error
-	// 	if err != nil {
-	// 		fmt.Println(err)
-	// 		return
-	// 	}
-	// }
+	if transfer.Status != " " {
+		fmt.Println("in here")
+		payload.Status = false
+		err = db.Create(&payload).Error
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+	}
 
-	// payload.Status = true
-	// err = db.Create(&payload).Error
-	// if err != nil {
-	// 	fmt.Println(err)
-	// 	return
-	// }
+	payload.Status = true
+	err = db.Create(&payload).Error
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 
 }
