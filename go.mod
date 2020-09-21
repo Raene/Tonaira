@@ -16,5 +16,6 @@ require (
 	github.com/pressly/goose v2.6.0+incompatible // indirect
 	github.com/rpip/paystack-go v0.0.0-20180509111153-5333b023a74e
 	github.com/spf13/viper v1.7.1
+	github.com/stellar/go v0.0.0-20200914175245-4431b97e445f
 	github.com/ziutek/mymysql v1.5.4 // indirect
 )
