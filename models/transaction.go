@@ -11,7 +11,7 @@ type Transaction struct {
 	ID            int64   `json:"id"`
 	AccountNumber string  `json:"accountNumber"`
 	Bank          string  `json:"bank"`
-	Sender        *string `json:"sender"`
+	Sender        string  `json:"sender"`
 	SenderEmail   *string `json:"senderEmail"`
 	ExchangeRate  float32 `json:"exchangeRate"`
 	Network       string  `json:"network"`
@@ -38,14 +38,13 @@ func (t *Transaction) Get(db *gorm.DB) ([]Transaction, []error) {
 }
 
 func (t *Transaction) GetWhere(db *gorm.DB) ([]Transaction, []error) {
-	{
-		transactions := []Transaction{}
-		errs := db.Where("status = ? AND network =?", false, "cfx").Find(&transactions).GetErrors()
-		if len(errs) != 0 {
-			return transactions, errs
-		}
-		return transactions, nil
+	transactions := []Transaction{}
+	errs := db.Where("status = ? AND network =?", false, "cfx").Find(&transactions).GetErrors()
+	if len(errs) != 0 {
+		return transactions, errs
 	}
+	return transactions, nil
+
 }
 
 func (t *Transaction) Update(db *gorm.DB) error {
