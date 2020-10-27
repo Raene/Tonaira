@@ -7,7 +7,7 @@ import (
 	"github.com/raene/Tonaira/models"
 )
 
-func (s *Stellar) get(ctx *fiber.Ctx) {
+func (s *Env) get(ctx *fiber.Ctx) {
 	db := s.Config.Db
 	q := strings.TrimSpace(ctx.Query("q"))
 	t := strings.TrimSpace(ctx.Query("type"))
@@ -49,6 +49,45 @@ func (s *Stellar) get(ctx *fiber.Ctx) {
 	})
 }
 
-func (s *Stellar) createAddr(ctx *fiber.Ctx) {
+func (s *Env) createAddr(ctx *fiber.Ctx) {
 	db := s.Config.Db
+	stellarTransaction := models.Transaction{}
+	stellarUser := models.StellarUser{}
+
+	err := ctx.BodyParser(&stellarTransaction)
+	if err != nil {
+		ctx.Status(400).JSON(&fiber.Map{
+			"data":    err,
+			"success": false,
+		})
+		return
+	}
+
+	stellarUser.AccountId = stellarTransaction.Sender
+	stellarTransaction.Address, err = models.CreateStellarUser(stellarUser, db)
+	if err != nil {
+		ctx.Status(400).JSON(&fiber.Map{
+			"data":    err,
+			"success": false,
+		})
+		return
+	}
+
+	err = stellarTransaction.Create(db)
+	if err != nil {
+		ctx.Status(500).JSON(&fiber.Map{
+			"data":    err,
+			"success": false,
+		})
+		return
+	}
+
+	var data = map[string]interface{}{
+		"address": stellarTransaction,
+	}
+
+	ctx.Status(200).JSON(fiber.Map{
+		"data":    data,
+		"success": true,
+	})
 }

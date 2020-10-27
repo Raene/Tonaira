@@ -5,12 +5,13 @@ import (
 	"github.com/raene/Tonaira/config"
 )
 
-type Stellar struct {
+type Env struct {
 	Config *config.Config
 	Router fiber.Router
 }
 
-func (s *Stellar) SetupRoutes() {
+func (s *Env) SetupRoutes() {
 	stellar := s.Router.Group("/federation")
 	stellar.Get("/", s.get)
+	stellar.Post("/", s.createAddr)
 }

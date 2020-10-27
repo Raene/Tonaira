@@ -11,7 +11,7 @@ type Transaction struct {
 	ID            int64   `json:"id"`
 	AccountNumber string  `json:"accountNumber"`
 	Bank          string  `json:"bank"`
-	Sender        *string `json:"sender"`
+	Sender        string  `json:"sender"`
 	SenderEmail   *string `json:"senderEmail"`
 	ExchangeRate  float32 `json:"exchangeRate"`
 	Network       string  `json:"network"`

@@ -41,13 +41,17 @@ func CreateStellarUser(user StellarUser, db *gorm.DB) (string, error) {
 
 	re := regexp.MustCompile(`\s+`)
 	user.AccountId = re.ReplaceAllString(user.AccountId, "_")
+	url := "tonaira.com"
+	userUrl := user.AccountId + "*" + url
 
-	err := db.Create(user).Error
+	user.StellarAddress = userUrl
+	user.MemoType = "text"
+	user.Memo = user.AccountId
+	err := db.Create(&user).Error
 	if err != nil {
 		return "", err
 	}
-	url := "tonaira.com"
-	return user.AccountId + "*" + url, nil
+	return userUrl, nil
 }
 
 func GetRecordByName(db *gorm.DB, name string) (StellarUser, []error) {

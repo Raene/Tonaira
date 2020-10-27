@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/raene/Tonaira/models"
-	Coin "github.com/raene/Tonaira/models"
 
 	//"strings"
 	"github.com/gofiber/fiber"
@@ -13,9 +12,6 @@ import (
 func (e *Env) getAddr(ctx *fiber.Ctx) {
 	db := e.Config.Db
 	cfxTransaction := models.Transaction{}
-
-	var x chan interface{} = make(chan interface{})
-	go Coin.CoinExchangeRate(x)
 
 	err := ctx.BodyParser(&cfxTransaction)
 	if err != nil {
@@ -46,8 +42,8 @@ func (e *Env) getAddr(ctx *fiber.Ctx) {
 		return
 	}
 
-	rate := <-x
-	cfxTransaction.ExchangeRate = rate.(float32)
+	rate := cfxTransaction.ExchangeRate
+	cfxTransaction.ExchangeRate = float32(rate)
 	err = cfxTransaction.Create(db)
 	if err != nil {
 		ctx.Status(500).JSON(&fiber.Map{

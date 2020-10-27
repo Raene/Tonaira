@@ -13,6 +13,7 @@ import (
 	"github.com/raene/Tonaira/handlers/coinstats"
 	"github.com/raene/Tonaira/handlers/conflux"
 	"github.com/raene/Tonaira/handlers/paystack"
+	"github.com/raene/Tonaira/handlers/stellar"
 )
 
 //Routes interface every route should implement to get spawned
@@ -52,7 +53,12 @@ func main() {
 		Router: api,
 	}
 
-	go spawnRoutes(m, coinRoutes, blockchainRoutes, confluxRoutes, paystackRoutes)
+	stellarRoutes := &stellar.Env{
+		Config: config,
+		Router: api,
+	}
+
+	go spawnRoutes(m, coinRoutes, blockchainRoutes, confluxRoutes, paystackRoutes, stellarRoutes)
 	go models.SpawnConfluxCron(db)
 
 	fmt.Println(<-m)
