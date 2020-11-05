@@ -129,9 +129,12 @@ github.com/go-sql-driver/mysql v1.5.0/go.mod h1:DCzpHaOWr8IXmIStZouvnhqoel9Qv2LB
 github.com/go-stack/stack v1.8.0 h1:5SgMzNM5HxrEjV0ww2lTmX6E2Izsfxas4+YHWRs3Lsk=
 github.com/go-stack/stack v1.8.0/go.mod h1:v0f6uXyyMGvRgIKkXu+yp6POWl0qKG85gN/melR3HDY=
 github.com/gobuffalo/packr v1.12.1/go.mod h1:H2dZhQFqHeZwr/5A/uGQkBp7xYuMGuzXFeKhYdcz5No=
+github.com/gofiber/cors v0.2.2 h1:NQgLeNq8SWCKsdGotodyFCqLdSnxGLISsp9OU01k/cs=
+github.com/gofiber/cors v0.2.2/go.mod h1:lAXoymRHZKASLfydSAtsRGVrukWi3KefFnfxmCEAH5o=
 github.com/gofiber/fiber v1.13.3/go.mod h1:KxRvVkqzfZOO6A7mBu+j7ncX2AcT6Sm6F7oeGR3Kgmw=
 github.com/gofiber/fiber v1.14.2 h1:JRm2REz1TVNt9ZXErTKhVV4y3u4QSmsQ2UU6LB6I6Ic=
 github.com/gofiber/fiber v1.14.2/go.mod h1:KxRvVkqzfZOO6A7mBu+j7ncX2AcT6Sm6F7oeGR3Kgmw=
+github.com/gofiber/fiber v1.14.6 h1:QRUPvPmr8ijQuGo1MgupHBn8E+wW0IKqiOvIZPtV70o=
 github.com/gofiber/logger v0.2.4 h1:QeiqYKntJXUHxeHMLjEwgHc+5AvegURhnR5dWt6poUk=
 github.com/gofiber/logger v0.2.4/go.mod h1:8qiyUc4qgS97W+5U/XAjbekWTCF9fFcOFlxscWdZ4ZQ=
 github.com/gofiber/utils v0.0.9 h1:Bu4grjEB4zof1TtpmPCG6MeX5nGv8SaQfzaUgjkf3H8=

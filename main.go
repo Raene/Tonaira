@@ -5,6 +5,7 @@ import (
 
 	"github.com/raene/Tonaira/models"
 
+	"github.com/gofiber/cors"
 	"github.com/gofiber/fiber"
 	"github.com/gofiber/logger"
 	Config "github.com/raene/Tonaira/config"
@@ -33,6 +34,7 @@ func main() {
 	db := database.Init()
 
 	app := fiber.New()
+	app.Use(cors.New())
 	api := app.Group("/api/v1", logger.New())
 	config := Config.Init(db)
 

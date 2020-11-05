@@ -7,6 +7,7 @@ require (
 	github.com/ethereum/go-ethereum v1.9.14
 	github.com/go-co-op/gocron v0.3.0
 	github.com/go-sql-driver/mysql v1.5.0
+	github.com/gofiber/cors v0.2.2
 	github.com/gofiber/fiber v1.14.2
 	github.com/gofiber/logger v0.2.4
 	github.com/jinzhu/gorm v1.9.16
