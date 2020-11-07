@@ -63,6 +63,15 @@ func (s *Env) createAddr(ctx *fiber.Ctx) {
 		return
 	}
 
+	v := s.Config.Val
+	if ok, errors := models.ValidateInputs(stellarTransaction, v); !ok {
+		ctx.Status(500).JSON(&fiber.Map{
+			"data":    errors,
+			"success": false,
+		})
+		return
+	}
+
 	stellarUser.AccountId = stellarTransaction.Sender
 	stellarTransaction.Address, err = models.CreateStellarUser(stellarUser, db)
 	if err != nil {
