@@ -19,6 +19,16 @@ func (e *Env) getAddr(ctx *fiber.Ctx) {
 		})
 		return
 	}
+
+	v := e.Config.Val
+	if ok, errors := models.ValidateInputs(cfxTransaction, v); !ok {
+		ctx.Status(500).JSON(&fiber.Map{
+			"data":    errors,
+			"success": false,
+		})
+		return
+	}
+
 	addr, err := models.GenerateConfluxAddress()
 	if err != nil {
 		ctx.Status(400).JSON(&fiber.Map{
