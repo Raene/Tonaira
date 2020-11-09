@@ -32,11 +32,11 @@ func spawnRoutes(m chan string, r ...Routes) {
 func main() {
 	var m chan string = make(chan string)
 	db := database.Init()
-
+	validate := models.InitValidator()
 	app := fiber.New()
 	app.Use(cors.New())
 	api := app.Group("/api/v1", logger.New())
-	config := Config.Init(db)
+	config := Config.Init(db, validate)
 
 	coinRoutes := &coinstats.CoinStats{Config: config, Router: api}
 

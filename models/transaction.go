@@ -8,13 +8,13 @@ import (
 
 //Transaction model containing details of transaction
 type Transaction struct {
-	ID            int64   `json:"id"`
-	AccountNumber string  `json:"accountNumber"`
-	Bank          string  `json:"bank"`
-	Sender        string  `json:"sender"`
-	SenderEmail   *string `json:"senderEmail"`
-	ExchangeRate  float32 `json:"exchangeRate"`
-	Network       string  `json:"network"`
+	ID            int64   `json:"id,omitempty" validate:"omitempty"`
+	AccountNumber string  `json:"accountNumber" validate:"required"`
+	Bank          string  `json:"bank" validate:"required"`
+	Sender        string  `json:"sender,omitempty" validate:"omitempty"`
+	SenderEmail   *string `json:"senderEmail" validate:"required,email"`
+	ExchangeRate  float32 `json:"exchangeRate" validate:"required"`
+	Network       string  `json:"network" validate:"required"`
 	Status        bool
 	Address       string
 	createdAt     time.Time

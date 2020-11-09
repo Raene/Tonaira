@@ -33,7 +33,7 @@ func Init() *gorm.DB {
 
 	db, err := gorm.Open("postgres", prosgretConname)
 	if err != nil {
-		panic("Failed to connect to database!")
+		log.Fatalf("Failed to connect to DB %s", err)
 	}
 	return db
 }
