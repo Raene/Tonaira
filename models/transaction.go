@@ -15,7 +15,8 @@ type Transaction struct {
 	SenderEmail   *string `json:"senderEmail" validate:"required,email"`
 	ExchangeRate  float32 `json:"exchangeRate" validate:"required"`
 	Network       string  `json:"network" validate:"required"`
-	Status        bool
+	Naira         float32 `json:"naira" validate:"required"`
+	Status        bool		//transaction status is to be updated when we have paid the client
 	Address       string
 	createdAt     time.Time
 }
@@ -53,4 +54,13 @@ func (t *Transaction) Update(db *gorm.DB) error {
 		return err
 	}
 	return nil
+}
+
+func (t *Transaction) GetBy(db *gorm.DB) (*Transaction, error) {
+	transaction := Transaction{}
+	err := db.Where(&t).First(&transaction).Error
+	if err != nil {
+		return nil, err
+	}
+	return &transaction, nil
 }
