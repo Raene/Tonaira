@@ -75,10 +75,12 @@ func (e *Env) getAddr(ctx *fiber.Ctx) {
 
 func (e *Env) initTransfer(ctx *fiber.Ctx) {
 	type CallbackPayload struct {
+		ID		int64	`json:"id,omitempty"`
 		Address string `json:address`
 		Value   int    `json:value`
 		TxHash  string `json:transactionHash`
 		Status  bool   `json:status`
+		TransactionID int64 `json:"transactionId,omitempty`
 	}
 
 	db := e.Config.Db
@@ -103,10 +105,10 @@ func (e *Env) initTransfer(ctx *fiber.Ctx) {
 		fmt.Println(err)
 		return
 	}
-
+	payload.TransactionID = t.ID
 	amount := t.ExchangeRate * float32(payload.Value)
 	//convert amount to naira first
-	ngn := amount * 40000
+	ngn := amount * t.Naira
 	transfer, err := models.MakeTransfer(t, ngn)
 	if err != nil {
 		fmt.Println(err)
