@@ -31,13 +31,16 @@ func spawnRoutes(m chan string, r ...Routes) {
 
 func main() {
 	var m chan string = make(chan string)
+	var e chan error  = make(chan error)
 	db := database.Init()
 	validate := models.InitValidator()
 	app := fiber.New()
 	app.Use(cors.New())
+	app.Static("/.well-known", "./.well-known")
 	api := app.Group("/api/v1", logger.New())
 	config := Config.Init(db, validate)
 
+	go models.StellarStream(e,db)
 	coinRoutes := &coinstats.CoinStats{Config: config, Router: api}
 
 	confluxRoutes := &conflux.Env{

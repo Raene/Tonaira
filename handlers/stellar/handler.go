@@ -92,7 +92,7 @@ func (s *Env) createAddr(ctx *fiber.Ctx) {
 	}
 
 	var data = map[string]interface{}{
-		"address": stellarTransaction,
+		"address": stellarTransaction.Address,
 	}
 
 	ctx.Status(200).JSON(fiber.Map{

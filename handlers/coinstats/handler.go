@@ -13,20 +13,19 @@ this handler receives the amount to be converted in USD and returns the converte
 along with the current exchange rate
 */
 func (c *CoinStats) getStats(ctx *fiber.Ctx) {
-	// var e chan error = make(chan error)
-	var x chan map[string]map[string]interface{} = make(chan map[string]map[string]interface{})
-	// var err error
+	// var r chan Coin.Result = make(chan Coin.Result)
 
-	go Coin.CoinExchangeRate(x)
-
-	// err = <-e
-	// if err != nil {
-	// 	ctx.Next(err)
-	// 	return
-	// }
-
-	xChangeRate := <-x
+	r := Coin.CoinExchangeRate()
+	result := <-r
+	if result.Error != nil {
+		fmt.Println(result.Error)
+		ctx.Next(result.Error)
+		return
+	}
+	
+	xChangeRate := result.Payload
 	fmt.Println(xChangeRate)
+	fmt.Println(result.Payload)
 
 	var data = map[string]interface{}{
 		"ExchangeRate": xChangeRate,
