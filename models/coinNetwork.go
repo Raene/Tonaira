@@ -22,7 +22,7 @@ var Networks = map[string]Network{
 	"btc": {Url: fmt.Sprintf("https://api.coinbase.com/v2/prices/BTC-USD/buy"), Key: "amount"},
 	"xlm": {Url: fmt.Sprintf("https://api.coinbase.com/v2/prices/XLM-USD/buy"),Key: "amount"},
 	"ngn":{Url: fmt.Sprintf("https://api.currencyfreaks.com/latest?apikey=80b78db254e64fd9a652b0a94b2331c1&symbols=NGN"),Key:"NGN"},
-	//"cfx": {Url: fmt.Sprintf("https://www.worldcoinindex.com/apiservice/ticker?key=HSgipENwBaSTTnytJxMjtJf1lqU4QSNVHtM&label=cfxbtc&fiat=USD"),Key: "cfx"},
+	"cfx": {Url: fmt.Sprintf("https://api.coingecko.com/api/v3/simple/price?ids=conflux-token&vs_currencies=USD"),Key: "usd"},
 }
 
 func CoinExchangeRate()  <-chan Result{
@@ -38,7 +38,7 @@ func CoinExchangeRate()  <-chan Result{
 	}()
 	return x
 }
-//https://api.currencyfreaks.com/latest?apikey=80b78db254e64fd9a652b0a94b2331c1&symbols=NGN
+
 func RatesQuery(url string) (map[string]interface{},error){
 	var result map[string]interface{}
 	response, err := http.Get(url)
@@ -69,12 +69,14 @@ func Loop(result map[string]interface{}, k string) string {
 	for key := range result {
 		_,ok := result[k]
 		if !ok {
-			fmt.Println(k)
-			fmt.Println(result)
 			if _,ok = result[key].(map[string]interface{});!ok{
 				continue
 			}
 			return Loop(result[key].(map[string]interface{}),k)
+		}
+		//cfx returns a float64 value so we convert it to string for json response
+		if v,ok := result[k].(float64); ok{
+			return fmt.Sprintf("%f", v)
 		}
  	  return result[k].(string)
 	} 
