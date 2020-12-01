@@ -3,11 +3,13 @@ package models
 import (
 	"context"
 	"fmt"
-	"time"
-	"regexp"
-	"strings"
-	"strconv"
 	"math/rand"
+	"reflect"
+	"regexp"
+	"strconv"
+	"strings"
+	"time"
+
 	"github.com/jinzhu/gorm"
 	"github.com/stellar/go/clients/horizonclient"
 	"github.com/stellar/go/protocols/horizon/operations"
@@ -30,18 +32,32 @@ func StellarStream(e chan error, db *gorm.DB) {
 	ctx := context.Background()
 	printHandler := func(op operations.Operation) {
 		fmt.Println("Watching now")
-		fmt.Println(op.GetType())
-		fmt.Println(op.GetID())
-		fmt.Println(op.GetTransactionHash())
-		fmt.Println(op.IsTransactionSuccessful())
-		fmt.Println(op.PagingToken())
+		// fmt.Println(op.GetType())
+		// fmt.Println(op.GetID())
+		// fmt.Println(op.GetTransactionHash())
+		// fmt.Println(op.IsTransactionSuccessful())
+		// fmt.Println(op.PagingToken())
+		var a float32
+		p,ok := op.(operations.Payment)
+		if ok {
+			fmt.Print(reflect.TypeOf(p.Amount))
+			b,err := strconv.ParseFloat(p.Amount,32)
+			if err != nil {
+				fmt.Println(err)
+				StellarStream(e, db)
+				e <- err
+			}
+			a = float32(b)
+		}
+
+
 		tx, err := client.TransactionDetail(op.GetTransactionHash())
 		if err != nil {
 			fmt.Println(err)
 			StellarStream(e, db)
 			e <- err
 		}
-		fmt.Println(tx.Memo)
+		//fmt.Println(tx)
 		//fetch user from DB and start paystack
 		record, errs := GetRecordByName(db, tx.Memo)
 		if errs != nil {
@@ -57,7 +73,10 @@ func StellarStream(e chan error, db *gorm.DB) {
 			StellarStream(e, db)
 			e <- err
 		}
-		fmt.Println(transaction)
+		cashamount := transaction.ExchangeRate * a
+	    //convert amount to naira first
+	    ngn := cashamount * transaction.Naira
+		fmt.Println(ngn)
 	}
 	fmt.Println("Watching now")
 	err := client.StreamPayments(ctx, opRequest, printHandler)
@@ -77,8 +96,9 @@ func CreateStellarUser(user StellarUser, db *gorm.DB) (string, error) {
 	s1 := rand.NewSource(time.Now().UnixNano())
 	r1 := rand.New(s1)
 	r1String := strconv.Itoa(r1.Intn(100))
+	user.AccountId = user.AccountId + r1String
 	url := "tonaira.com"
-	userUrl := user.AccountId + r1String + "*" + url
+	userUrl := user.AccountId + "*" + url
 
 	user.StellarAddress = userUrl
 	user.MemoType = "text"
