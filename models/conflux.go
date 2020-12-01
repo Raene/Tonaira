@@ -73,6 +73,8 @@ func VerifyTransaction(s *gocron.Scheduler, tx Transaction, db *gorm.DB) {
 			s.Stop()
 		}
 
+		//after transfer to main account update callback payload with needed details
+		//then initiate paystack transfer
 		if t.Status != nil {
 			//set account status in db to true
 			tx.Status = true
